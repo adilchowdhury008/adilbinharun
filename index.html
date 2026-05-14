@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Sapphire Profile | Blue Edition</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Tiro+Bangla&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        :root {
+            --accent: #00d4ff; 
+            --accent-glow: rgba(0, 212, 255, 0.4);
+            --bg-deep: #020617; 
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(0, 212, 255, 0.15);
+            --text-main: #f8fafc;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; cursor: none !important; }
+        
+        body {
+            background: var(--bg-deep);
+            color: var(--text-main);
+            font-family: 'Poppins', 'Tiro Bangla', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .scanline {
+            width: 100%; height: 100px; z-index: 10;
+            background: linear-gradient(0deg, transparent 0%, rgba(0, 212, 255, 0.05) 50%, transparent 100%);
+            position: fixed; bottom: 100%; left: 0; pointer-events: none; animation: scan 8s linear infinite;
+        }
+        @keyframes scan { 0% { bottom: 100%; } 100% { bottom: -100px; } }
+
+        .grid-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(var(--glass-border) 1px, transparent 1px), linear-gradient(90deg, var(--glass-border) 1px, transparent 1px);
+            background-size: 40px 40px; z-index: -1; opacity: 0.05;
+        }
+
+        .lang-switcher {
+            position: fixed; top: 20px; right: 20px; z-index: 1000;
+            background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border); border-radius: 20px;
+            padding: 4px; display: flex; gap: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .lang-btn {
+            padding: 8px 12px; border-radius: 15px; cursor: pointer !important;
+            font-size: 10px; font-weight: 700; transition: 0.3s; color: #64748b;
+        }
+        .lang-btn.active { background: var(--accent); color: #000; box-shadow: 0 0 15px var(--accent-glow); }
+
+        .container { max-width: 600px; margin: 0 auto; padding: 100px 20px; }
+
+        .profile-card {
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.8) 0%, rgba(2, 6, 23, 0.9) 100%);
+            backdrop-filter: blur(20px); border: 1px solid var(--glass-border);
+            border-radius: 40px; padding: 50px 20px 40px; text-align: center;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+        }
+
+        .pfp-ring {
+            width: 150px; height: 150px; border-radius: 50%; margin: 0 auto 25px;
+            padding: 5px; background: linear-gradient(45deg, var(--accent), #0072ff);
+            box-shadow: 0 0 30px var(--accent-glow); position: relative;
+        }
+        .pfp-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid var(--bg-deep); }
+
+        .section-label { 
+            display: flex; align-items: center; gap: 15px; margin: 50px 0 20px; 
+            font-size: 10px; text-transform: uppercase; letter-spacing: 3px; color: var(--accent); opacity: 0.7;
+        }
+        .section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--glass-border), transparent); }
+
+        .item-card {
+            background: var(--glass); border: 1px solid var(--glass-border);
+            border-radius: 24px; padding: 16px 20px; display: flex; align-items: center;
+            justify-content: space-between; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-bottom: 12px;
+        }
+        .item-card:hover { border-color: var(--accent); background: rgba(0, 212, 255, 0.05); transform: translateY(-3px); }
+
+        .icon-box {
+            width: 45px; height: 45px; border-radius: 14px; background: #0f172a;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid var(--glass-border); font-size: 1.2rem; color: var(--accent);
+        }
+
+        .btn-action {
+            width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--glass-border);
+            display: flex; align-items: center; justify-content: center; color: var(--accent);
+            cursor: pointer !important; transition: 0.3s; background: rgba(0,0,0,0.3);
+        }
+        .btn-action:hover { background: var(--accent); color: #000; transform: scale(1.1); }
+
+        #cursor-glow {
+            position: fixed; width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+            border-radius: 50%; pointer-events: none; z-index: 20000;
+            transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s;
+        }
+        #cursor-dot {
+            position: fixed; width: 8px; height: 8px; background: var(--accent);
+            border-radius: 50%; pointer-events: none; z-index: 20001;
+            transform: translate(-50%, -50%); box-shadow: 0 0 15px var(--accent);
+        }
+
+        #admin-modal {
+            position: fixed; inset: 0; background: rgba(2, 6, 23, 0.98);
+            z-index: 10001; display: none; justify-content: center; align-items: center; padding: 20px;
+        }
+        .admin-box {
+            width: 100%; max-width: 500px; background: #0f172a; border: 1px solid var(--glass-border);
+            border-radius: 30px; padding: 30px; max-height: 90vh; overflow-y: auto;
+        }
+        .admin-input {
+            width: 100%; background: #020617; border: 1px solid #1e293b; padding: 12px;
+            border-radius: 15px; color: #fff; margin-bottom: 12px; font-size: 0.85rem;
+        }
+        .p-btn { width: 100%; padding: 15px; border-radius: 15px; font-weight: 700; cursor: pointer !important; margin-top: 10px; }
+        .btn-prime { background: var(--accent); color: #000; }
+        .btn-sec { background: #1e293b; color: #fff; }
+
+        #toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: var(--accent); color: #000; padding: 12px 30px; border-radius: 50px;
+            font-weight: 700; z-index: 20002; transition: 0.5s; font-size: 0.8rem;
+        }
+        #toast.show { transform: translateX(-50%) translateY(0); }
+
+        @media (max-width: 480px) {
+            .container { padding: 80px 15px; }
+            .profile-card { padding: 40px 15px 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="cursor-glow"></div>
+    <div id="cursor-dot"></div>
+    <div class="scanline"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- Language Selector Corner -->
+    <div class="lang-switcher" data-aos="fade-left">
+        <div class="lang-btn" id="btn-en" onclick="setLang('en')">EN</div>
+        <div class="lang-btn" id="btn-bn" onclick="setLang('bn')">বাং</div>
+        <div class="lang-btn" id="btn-ar" onclick="setLang('ar')">AR</div>
+    </div>
+
+    <div class="container">
+        <section class="profile-card" data-aos="zoom-in">
+            <div class="pfp-ring" data-tilt>
+                <img src="" id="ui-img" class="pfp-img" alt="Avatar">
+            </div>
+            <h1 class="name-text text-3xl font-bold text-white mb-2" id="ui-name"></h1>
+            <p class="prof-text text-xs tracking-[4px] uppercase text-cyan-400 font-semibold" id="ui-prof"></p>
+            <div id="ui-quote" class="mt-6 text-sm italic opacity-50 px-6 leading-relaxed"></div>
+        </section>
+
+        <div class="section-label" id="label-soc">Social Networks</div>
+        <div id="social-grid"></div>
+
+        <div class="section-label" id="label-con">Communication Channels</div>
+        <div id="contact-grid"></div>
+
+        <footer class="mt-20 pb-10 text-center opacity-30 text-[9px] tracking-[5px]" id="ui-footer"></footer>
+    </div>
+
+    <div id="admin-modal">
+        <!-- Login Panel -->
+        <div class="admin-box" id="login-panel">
+            <div class="text-center mb-8">
+                <i class="fas fa-shield-halved text-4xl text-cyan-400 mb-4"></i>
+                <h2 class="text-lg font-bold tracking-widest uppercase">Encrypted Access</h2>
+            </div>
+            <input type="password" id="adm-pass" class="admin-input text-center" placeholder="SYSTEM KEY">
+            <button class="p-btn btn-prime" onclick="login()">Authenticate</button>
+            <button class="p-btn btn-sec" onclick="closeAdmin()">Cancel</button>
+        </div>
+
+        <!-- Dashboard Panel -->
+        <div class="admin-box" id="dash-panel" style="display:none;">
+            <div class="flex gap-2 mb-6 bg-slate-900/50 p-1.5 rounded-2xl">
+                <button onclick="showTab('profile')" class="flex-1 py-2 rounded-xl text-[10px] font-bold hover:bg-cyan-500 hover:text-black transition">INFO</button>
+                <button onclick="showTab('socials')" class="flex-1 py-2 rounded-xl text-[10px] font-bold hover:bg-cyan-500 hover:text-black transition">SOCIALS</button>
+                <button onclick="showTab('contacts')" class="flex-1 py-2 rounded-xl text-[10px] font-bold hover:bg-cyan-500 hover:text-black transition">CONTACTS</button>
+            </div>
+
+            <!-- Profile Info Edit -->
+            <div id="adm-profile" class="adm-tab">
+                <input type="text" id="in-img" class="admin-input" placeholder="Avatar URL">
+                <div class="grid grid-cols-3 gap-2">
+                    <input type="text" id="in-name-en" class="admin-input" placeholder="Name EN">
+                    <input type="text" id="in-name-bn" class="admin-input" placeholder="নাম BN">
+                    <input type="text" id="in-name-ar" class="admin-input" placeholder="اسم AR">
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <input type="text" id="in-prof-en" class="admin-input" placeholder="Role EN">
+                    <input type="text" id="in-prof-bn" class="admin-input" placeholder="পেশা BN">
+                    <input type="text" id="in-prof-ar" class="admin-input" placeholder="دور AR">
+                </div>
+                <div class="grid grid-cols-1 gap-2">
+                    <textarea id="in-quote-en" class="admin-input" placeholder="Quote EN"></textarea>
+                    <textarea id="in-quote-bn" class="admin-input" placeholder="উক্তি BN"></textarea>
+                    <textarea id="in-quote-ar" class="admin-input" placeholder="اقتباس AR"></textarea>
+                </div>
+                <input type="text" id="in-footer" class="admin-input" placeholder="Footer Text">
+            </div>
+
+            <!-- Social Media Link Manager -->
+            <div id="adm-socials" class="adm-tab" style="display:none;">
+                <div class="bg-black/30 p-4 rounded-2xl border border-white/5 mb-4">
+                    <p class="text-[9px] text-cyan-400 mb-3 font-bold" id="soc-title">ADD NEW LINK</p>
+                    <div class="grid grid-cols-3 gap-2 mb-2">
+                        <input type="text" id="in-soc-en" class="admin-input !mb-0" placeholder="Name EN">
+                        <input type="text" id="in-soc-bn" class="admin-input !mb-0" placeholder="নাম BN">
+                        <input type="text" id="in-soc-ar" class="admin-input !mb-0" placeholder="اسم AR">
+                    </div>
+                    <input type="text" id="in-soc-link" class="admin-input" placeholder="URL (https://...)">
+                    <button class="p-btn btn-prime !mt-0" onclick="saveSocial()">Save Social</button>
+                    <button class="p-btn btn-sec hidden" id="btn-soc-cancel" onclick="resetSocForm()">Discard</button>
+                </div>
+                <div id="adm-soc-list" class="space-y-2 max-h-40 overflow-y-auto"></div>
+            </div>
+
+            <!-- Contact Channel Manager -->
+            <div id="adm-contacts" class="adm-tab" style="display:none;">
+                <div class="bg-black/30 p-4 rounded-2xl border border-white/5 mb-4">
+                    <p class="text-[9px] text-cyan-400 mb-3 font-bold" id="con-title">ADD NEW CHANNEL</p>
+                    <div class="grid grid-cols-3 gap-2 mb-2">
+                        <input type="text" id="in-con-en" class="admin-input !mb-0" placeholder="Type EN">
+                        <input type="text" id="in-con-bn" class="admin-input !mb-0" placeholder="BN">
+                        <input type="text" id="in-con-ar" class="admin-input !mb-0" placeholder="AR">
+                    </div>
+                    <input type="text" id="in-con-val" class="admin-input" placeholder="Value (Phone/Email)">
+                    <button class="p-btn btn-prime !mt-0" onclick="saveContact()">Save Channel</button>
+                    <button class="p-btn btn-sec hidden" id="btn-con-cancel" onclick="resetConForm()">Discard</button>
+                </div>
+                <div id="adm-con-list" class="space-y-2 max-h-40 overflow-y-auto"></div>
+            </div>
+
+            <div class="flex gap-3 mt-8">
+                <button class="p-btn btn-prime" onclick="saveToDisk()">Apply All</button>
+                <button class="p-btn btn-sec" onclick="closeAdmin()">Exit</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast">SYSTEM UPDATED</div>
+
+    <script>
+        const DEFAULT_DB = {
+            profile: {
+                img: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sapphire",
+                name: { en: "Adil Bin Harun", bn: "আদিল বিন হারুন", ar: "عادل بن هارون" },
+                prof: { en: "System Architect", bn: "সিস্টেম আর্কিটেক্ট", ar: "مهندس نظم" },
+                quote: { en: "Navigating the deep sapphire digital oceans.", bn: "ডিজিটাল সাগরের অতল গভীরে সত্যের সন্ধান।", ar: "الإبحار في المحيطات الرقمية الياقوتية العমিقة." },
+                footer: "ENCRYPTED SAPPHIRE CORE • v10.0"
+            },
+            socials: [
+                { id: 1, name: {en: "LinkedIn", bn: "লিঙ্কডইন", ar: "لينكد إن"}, link: "https://linkedin.com" },
+                { id: 2, name: {en: "GitHub", bn: "গিটহাব", ar: "غيتهاب"}, link: "https://github.com" }
+            ],
+            contacts: [
+                { id: 1, label: {en: "WhatsApp", bn: "হোয়াটসঅ্যাপ", ar: "واتساب"}, val: "+880123456789" },
+                { id: 2, label: {en: "Email", bn: "ইমেইল", ar: "بريد"}, val: "adil@example.com" }
+            ]
+        };
+
+        let db = JSON.parse(localStorage.getItem('sapphire_cyber_v10')) || DEFAULT_DB;
+        let lang = localStorage.getItem('app_lang') || 'en';
+        let editSocIdx = -1;
+        let editConIdx = -1;
+
+        function getIcon(name) {
+            const n = name.toLowerCase();
+            if(n.includes('facebook')) return 'fab fa-facebook';
+            if(n.includes('youtube')) return 'fab fa-youtube';
+            if(n.includes('linkedin')) return 'fab fa-linkedin';
+            if(n.includes('github')) return 'fab fa-github';
+            if(n.includes('whatsapp')) return 'fab fa-whatsapp';
+            if(n.includes('telegram')) return 'fab fa-telegram';
+            if(n.includes('twitter') || n.includes('x')) return 'fab fa-x-twitter';
+            if(n.includes('viber')) return 'fab fa-viber';
+            if(n.includes('line')) return 'fab fa-line';
+            if(n.includes('email') || n.includes('gmail')) return 'fas fa-envelope';
+            if(n.includes('phone') || n.includes('call')) return 'fas fa-phone';
+            return 'fas fa-link';
+        }
+
+        function render() {
+            try {
+                const p = db.profile;
+                const l = lang;
+                
+                document.getElementById('ui-img').src = p.img;
+                document.getElementById('ui-name').innerText = p.name[l] || p.name.en;
+                document.getElementById('ui-prof').innerText = p.prof[l] || p.prof.en;
+                document.getElementById('ui-quote').innerText = p.quote[l] || p.quote.en;
+                document.getElementById('ui-footer').innerText = p.footer;
+
+                const labels = {
+                    en: { soc: "Social Networks", con: "Communication Channels" },
+                    bn: { soc: "সামাজিক মাধ্যম", con: "যোগাযোগ মাধ্যম" },
+                    ar: { soc: "شبكات اجتماعية", con: "قنوات الاتصال" }
+                };
+                document.getElementById('label-soc').innerText = labels[l].soc;
+                document.getElementById('label-con').innerText = labels[l].con;
+
+                // Social Links Rendering
+                document.getElementById('social-grid').innerHTML = db.socials.map(s => `
+                    <div class="item-card" data-aos="fade-up">
+                        <div class="flex items-center gap-4">
+                            <div class="icon-box"><i class="${getIcon(s.name.en)}"></i></div>
+                            <div>
+                                <p class="font-bold text-white text-sm">${s.name[l] || s.name.en}</p>
+                                <p class="text-[9px] opacity-30 tracking-widest uppercase">${s.name.en}</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <a href="${s.link}" target="_blank" class="btn-action"><i class="fas fa-external-link-alt"></i></a>
+                            <div class="btn-action" onclick="copy('${s.link}')"><i class="far fa-copy"></i></div>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Contact Channels Rendering (Call vs Send Logic)
+                document.getElementById('contact-grid').innerHTML = db.contacts.map(c => {
+                    let link = "";
+                    let icon = "fas fa-paper-plane";
+                    const v = c.val.toLowerCase();
+                    const lbl = c.label.en.toLowerCase();
+
+                    if(v.includes('@')) { link = `mailto:${c.val}`; icon = "fas fa-paper-plane"; }
+                    else if(lbl.includes('whatsapp')) { link = `https://wa.me/${c.val.replace(/\D/g,'')}`; icon = "fas fa-paper-plane"; }
+                    else if(lbl.includes('phone') || lbl.includes('call') || /^\+?\d+$/.test(v.replace(/\s/g,''))) { link = `tel:${c.val}`; icon = "fas fa-phone-alt"; }
+                    else { link = v.startsWith('http') ? v : `https://${v}`; }
+
+                    return `
+                    <div class="item-card" data-aos="fade-up">
+                        <div class="flex items-center gap-4">
+                            <div class="icon-box"><i class="${getIcon(c.label.en)}"></i></div>
+                            <div>
+                                <p class="font-bold text-white text-sm">${c.label[l] || c.label.en}</p>
+                                <p class="text-[9px] opacity-30 tracking-widest uppercase">${c.label.en}</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <a href="${link}" target="_blank" class="btn-action"><i class="${icon}"></i></a>
+                            <div class="btn-action" onclick="copy('${c.val}')"><i class="far fa-copy"></i></div>
+                        </div>
+                    </div>
+                `}).join('');
+
+                renderAdminLists();
+            } catch(e) {
+                console.error("Render Error:", e);
+                localStorage.setItem('sapphire_cyber_v10', JSON.stringify(DEFAULT_DB));
+                location.reload();
+            }
+        }
+
+        function renderAdminLists() {
+            document.getElementById('adm-soc-list').innerHTML = db.socials.map((s, i) => `
+                <div class="flex justify-between items-center bg-white/5 p-3 rounded-xl border border-white/5">
+                    <span class="text-[10px] font-bold text-cyan-400">${s.name.en}</span>
+                    <div class="flex gap-3">
+                        <button onclick="editSocial(${i})" class="text-[9px] hover:text-white">EDIT</button>
+                        <button onclick="delSocial(${i})" class="text-[9px] text-red-400">DEL</button>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('adm-con-list').innerHTML = db.contacts.map((c, i) => `
+                <div class="flex justify-between items-center bg-white/5 p-3 rounded-xl border border-white/5">
+                    <span class="text-[10px] font-bold text-cyan-400">${c.label.en}</span>
+                    <div class="flex gap-3">
+                        <button onclick="editContact(${i})" class="text-[9px] hover:text-white">EDIT</button>
+                        <button onclick="delContact(${i})" class="text-[9px] text-red-400">DEL</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function login() {
+            if(document.getElementById('adm-pass').value === 'Adil@2005') {
+                document.getElementById('login-panel').style.display = 'none';
+                document.getElementById('dash-panel').style.display = 'block';
+                syncInputs();
+            } else { msg("AUTH FAILED"); }
+        }
+
+        function syncInputs() {
+            document.getElementById('in-img').value = db.profile.img;
+            document.getElementById('in-name-en').value = db.profile.name.en;
+            document.getElementById('in-name-bn').value = db.profile.name.bn || "";
+            document.getElementById('in-name-ar').value = db.profile.name.ar || "";
+            document.getElementById('in-prof-en').value = db.profile.prof.en;
+            document.getElementById('in-prof-bn').value = db.profile.prof.bn || "";
+            document.getElementById('in-prof-ar').value = db.profile.prof.ar || "";
+            document.getElementById('in-quote-en').value = db.profile.quote.en;
+            document.getElementById('in-quote-bn').value = db.profile.quote.bn || "";
+            document.getElementById('in-quote-ar').value = db.profile.quote.ar || "";
+            document.getElementById('in-footer').value = db.profile.footer;
+        }
+
+        function saveSocial() {
+            const en = document.getElementById('in-soc-en').value;
+            const bn = document.getElementById('in-soc-bn').value;
+            const ar = document.getElementById('in-soc-ar').value;
+            const link = document.getElementById('in-soc-link').value;
+            if(!en || !link) return;
+            const item = { id: Date.now(), name: {en, bn, ar}, link };
+            if(editSocIdx === -1) db.socials.push(item); else db.socials[editSocIdx] = item;
+            resetSocForm(); renderAdminLists(); msg("Social Saved");
+        }
+
+        function editSocial(i) {
+            editSocIdx = i; const s = db.socials[i];
+            document.getElementById('in-soc-en').value = s.name.en;
+            document.getElementById('in-soc-bn').value = s.name.bn || "";
+            document.getElementById('in-soc-ar').value = s.name.ar || "";
+            document.getElementById('in-soc-link').value = s.link;
+            document.getElementById('soc-title').innerText = "EDITING LINK";
+            document.getElementById('btn-soc-cancel').classList.remove('hidden');
+        }
+
+        function saveContact() {
+            const en = document.getElementById('in-con-en').value;
+            const bn = document.getElementById('in-con-bn').value;
+            const ar = document.getElementById('in-con-ar').value;
+            const val = document.getElementById('in-con-val').value;
+            if(!en || !val) return;
+            const item = { id: Date.now(), label: {en, bn, ar}, val };
+            if(editConIdx === -1) db.contacts.push(item); else db.contacts[editConIdx] = item;
+            resetConForm(); renderAdminLists(); msg("Contact Saved");
+        }
+
+        function editContact(i) {
+            editConIdx = i; const c = db.contacts[i];
+            document.getElementById('in-con-en').value = c.label.en;
+            document.getElementById('in-con-bn').value = c.label.bn || "";
+            document.getElementById('in-con-ar').value = c.label.ar || "";
+            document.getElementById('in-con-val').value = c.val;
+            document.getElementById('con-title').innerText = "EDITING CHANNEL";
+            document.getElementById('btn-con-cancel').classList.remove('hidden');
+        }
+
+        function resetSocForm() { editSocIdx = -1; document.querySelectorAll('#adm-socials input').forEach(i=>i.value=''); document.getElementById('soc-title').innerText="ADD NEW LINK"; document.getElementById('btn-soc-cancel').classList.add('hidden'); }
+        function resetConForm() { editConIdx = -1; document.querySelectorAll('#adm-contacts input').forEach(i=>i.value=''); document.getElementById('con-title').innerText="ADD NEW CHANNEL"; document.getElementById('btn-con-cancel').classList.add('hidden'); }
+        function delSocial(i) { db.socials.splice(i,1); renderAdminLists(); }
+        function delContact(i) { db.contacts.splice(i,1); renderAdminLists(); }
+
+        function saveToDisk() {
+            db.profile.img = document.getElementById('in-img').value;
+            db.profile.name = { en: document.getElementById('in-name-en').value, bn: document.getElementById('in-name-bn').value, ar: document.getElementById('in-name-ar').value };
+            db.profile.prof = { en: document.getElementById('in-prof-en').value, bn: document.getElementById('in-prof-bn').value, ar: document.getElementById('in-prof-ar').value };
+            db.profile.quote = { en: document.getElementById('in-quote-en').value, bn: document.getElementById('in-quote-bn').value, ar: document.getElementById('in-quote-ar').value };
+            db.profile.footer = document.getElementById('in-footer').value;
+            localStorage.setItem('sapphire_cyber_v10', JSON.stringify(db));
+            render(); msg("Core Memory Updated"); closeAdmin();
+        }
+
+        function closeAdmin() {
+            document.getElementById('admin-modal').style.display = 'none';
+            document.getElementById('dash-panel').style.display = 'none';
+            document.getElementById('login-panel').style.display = 'block';
+            document.getElementById('adm-pass').value = '';
+        }
+
+        function showTab(t) {
+            document.querySelectorAll('.adm-tab').forEach(x => x.style.display = 'none');
+            document.getElementById('adm-' + t).style.display = 'block';
+        }
+
+        function setLang(l) {
+            lang = l;
+            localStorage.setItem('app_lang', l);
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + l).classList.add('active');
+            render();
+        }
+
+        function copy(txt) {
+            const el = document.createElement('textarea'); el.value = txt; document.body.appendChild(el); el.select();
+            document.execCommand('copy'); document.body.removeChild(el); msg("Copied to Clipboard");
+        }
+
+        function msg(m) {
+            const t = document.getElementById('toast'); t.innerText = m; t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2500);
+        }
+
+        const glow = document.getElementById('cursor-glow');
+        const dot = document.getElementById('cursor-dot');
+        document.addEventListener('mousemove', e => {
+            glow.style.left = dot.style.left = e.clientX + 'px';
+            glow.style.top = dot.style.top = e.clientY + 'px';
+        });
+
+        let timer;
+        const start = () => timer = setTimeout(() => {
+            document.getElementById('admin-modal').style.display = 'flex';
+        }, 2500);
+        const stop = () => clearTimeout(timer);
+        document.addEventListener('mousedown', start); document.addEventListener('touchstart', start);
+        document.addEventListener('mouseup', stop); document.addEventListener('touchend', stop);
+
+        window.onload = () => { 
+            AOS.init({ duration: 800 }); 
+            setLang(lang); 
+        };
+    </script>
+</body>
+</html>

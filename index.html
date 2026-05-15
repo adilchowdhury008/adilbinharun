@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adil Bin Harun</title>
     
-    <!-- Font Awesome & Google Fonts -->
+    <!-- External Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Tiro+Bangla&display=swap" rel="stylesheet">
-    
-    <!-- Animation & UI Libraries -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Tiro+Bangla&family=Amiri&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -29,30 +27,27 @@
         }
 
         [data-theme="light"] {
-            --bg-deep: #f8fafc;
+            --bg-deep: #f1f5f9;
             --text-main: #0f172a;
             --glass: rgba(15, 23, 42, 0.03);
             --glass-border: rgba(0, 212, 255, 0.2);
             --card-bg: #ffffff;
-            --card-shadow: none; 
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.05); 
             --accent: #0088cc;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        @media (hover: hover) and (pointer: fine) {
-            * { cursor: none !important; }
-        }
-
         body {
             background: var(--bg-deep);
             color: var(--text-main);
-            font-family: 'Poppins', 'Tiro Bangla', sans-serif;
+            font-family: 'Poppins', 'Tiro Bangla', 'Amiri', sans-serif;
             overflow-x: hidden;
             min-height: 100vh;
             transition: var(--transition);
         }
 
+        /* Scanline and Grid Effects */
         .scanline {
             width: 100%; height: 100px; z-index: 10;
             background: linear-gradient(0deg, transparent 0%, rgba(0, 212, 255, 0.05) 50%, transparent 100%);
@@ -66,6 +61,9 @@
             background-size: 40px 40px; z-index: -1; opacity: 0.05;
         }
 
+        .container { max-width: 600px; margin: 0 auto; padding: 100px 20px; position: relative; }
+
+        /* Navigation */
         .top-controls {
             position: fixed; top: 20px; left: 0; right: 0; padding: 0 20px;
             display: flex; justify-content: space-between; align-items: center; z-index: 1000;
@@ -75,122 +73,115 @@
             background: var(--card-bg); backdrop-filter: blur(12px);
             border: 1px solid var(--glass-border); border-radius: 50%;
             width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;
-            cursor: pointer !important; color: var(--accent); transition: var(--transition);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            cursor: pointer; color: var(--accent); transition: var(--transition);
         }
 
         .lang-switcher {
             background: var(--card-bg); backdrop-filter: blur(12px);
             border: 1px solid var(--glass-border); border-radius: 20px;
-            padding: 4px; display: flex; gap: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 4px; display: flex; gap: 4px;
         }
 
         .lang-btn {
-            padding: 8px 12px; border-radius: 15px; cursor: pointer !important;
+            padding: 6px 12px; border-radius: 15px; cursor: pointer;
             font-size: 10px; font-weight: 700; transition: 0.3s; color: #64748b;
         }
         .lang-btn.active { background: var(--accent); color: #fff; box-shadow: 0 0 15px var(--accent-glow); }
 
-        .container { max-width: 600px; margin: 0 auto; padding: 100px 20px; position: relative; }
-
+        /* Profile Card */
         .profile-card {
             background: var(--card-bg);
             backdrop-filter: blur(20px); 
             border: 1px solid var(--glass-border);
-            border-radius: 40px; padding: 50px 20px 40px; text-align: center;
+            border-radius: 40px; padding: 50px 20px; text-align: center;
             box-shadow: var(--card-shadow);
         }
 
         .pfp-ring {
-            width: 150px; height: 150px; border-radius: 50%; margin: 0 auto 25px;
+            width: 140px; height: 140px; border-radius: 50%; margin: 0 auto 25px;
             padding: 5px; background: linear-gradient(45deg, var(--accent), #0072ff);
-            box-shadow: 0 0 30px var(--accent-glow); position: relative;
+            box-shadow: 0 0 30px var(--accent-glow);
         }
         .pfp-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid var(--card-bg); background: #1e293b; }
 
+        /* Lists */
         .section-label { 
-            display: flex; align-items: center; gap: 15px; margin: 50px 0 20px; 
-            font-size: 10px; text-transform: uppercase; letter-spacing: 3px; color: var(--accent); opacity: 0.7;
+            display: flex; align-items: center; gap: 15px; margin: 40px 0 20px; 
+            font-size: 10px; text-transform: uppercase; letter-spacing: 3px; color: var(--accent);
         }
         .section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--glass-border), transparent); }
 
         .item-card {
             background: var(--glass); border: 1px solid var(--glass-border);
-            border-radius: 24px; padding: 16px 20px; display: flex; align-items: center;
-            justify-content: space-between; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            margin-bottom: 12px; gap: 12px;
+            border-radius: 24px; padding: 14px 20px; display: flex; align-items: center;
+            justify-content: space-between; margin-bottom: 12px; transition: 0.3s;
         }
-        .item-card:hover { border-color: var(--accent); background: rgba(0, 212, 255, 0.08); transform: translateY(-3px); }
+        .item-card:hover { transform: scale(1.02); background: rgba(0, 212, 255, 0.05); border-color: var(--accent); }
 
         .icon-box {
             width: 45px; height: 45px; border-radius: 14px; background: var(--bg-deep);
             display: flex; align-items: center; justify-content: center;
-            border: 1px solid var(--glass-border); font-size: 1.2rem; color: var(--accent);
-            flex-shrink: 0;
+            border: 1px solid var(--glass-border); color: var(--accent); font-size: 1.2rem;
         }
 
         .btn-action {
-            width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--glass-border);
+            width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--glass-border);
             display: flex; align-items: center; justify-content: center; color: var(--accent);
-            cursor: pointer !important; transition: 0.3s; background: rgba(0,0,0,0.05);
+            cursor: pointer; transition: 0.3s;
         }
-        .btn-action:hover { background: var(--accent); color: #fff; transform: scale(1.1); }
+        .btn-action:hover { background: var(--accent); color: white; }
 
-        #cursor-glow {
-            position: fixed; width: 300px; height: 300px;
-            background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
-            border-radius: 50%; pointer-events: none; z-index: 20000;
-            transform: translate(-50%, -50%);
-        }
-        #cursor-dot {
-            position: fixed; width: 8px; height: 8px; background: var(--accent);
-            border-radius: 50%; pointer-events: none; z-index: 20001;
-            transform: translate(-50%, -50%); box-shadow: 0 0 15px var(--accent);
-        }
-
+        /* Admin UI */
         #admin-modal {
-            position: fixed; inset: 0; background: rgba(2, 6, 23, 0.95);
+            position: fixed; inset: 0; background: rgba(2, 6, 23, 0.98);
             z-index: 10001; display: none; justify-content: center; align-items: center; padding: 20px;
         }
         .admin-box {
-            width: 100%; max-width: 500px; background: #0f172a; border: 1px solid var(--glass-border);
-            border-radius: 30px; padding: 30px; max-height: 90vh; overflow-y: auto; color: white;
+            width: 100%; max-width: 550px; background: #0f172a; border: 1px solid var(--glass-border);
+            border-radius: 32px; padding: 30px; max-height: 90vh; overflow-y: auto; color: white;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
         }
         .admin-input {
-            width: 100%; background: #020617; border: 1px solid #1e293b; padding: 12px;
-            border-radius: 15px; color: #fff; margin-bottom: 12px; font-size: 0.85rem;
+            width: 100%; background: #020617; border: 1px solid #1e293b; padding: 12px 16px;
+            border-radius: 12px; color: #fff; margin-bottom: 12px; font-size: 0.85rem; transition: 0.3s;
         }
-        .p-btn { width: 100%; padding: 15px; border-radius: 15px; font-weight: 700; cursor: pointer !important; margin-top: 10px; }
-        .btn-prime { background: var(--accent); color: #fff; }
-        .btn-sec { background: #1e293b; color: #fff; }
+        .admin-input:focus { border-color: var(--accent); outline: none; background: #000; }
+
+        .adm-item-card {
+            background: #1e293b; border: 1px solid #334155; border-radius: 20px;
+            padding: 20px; margin-bottom: 15px; position: relative;
+        }
+        .adm-label-tag { font-size: 9px; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 5px; display: block; }
+        
+        .p-btn { width: 100%; padding: 14px; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .btn-prime { background: var(--accent); color: #000; }
+        .btn-sec { background: #334155; color: #fff; }
+        .btn-danger { background: #7f1d1d; color: #f87171; font-size: 10px; padding: 8px; border: none; }
 
         #toast {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px);
-            background: var(--accent); color: #fff; padding: 12px 30px; border-radius: 50px;
+            background: var(--accent); color: #000; padding: 10px 25px; border-radius: 50px;
             font-weight: 700; z-index: 20002; transition: 0.5s; font-size: 0.8rem;
         }
         #toast.show { transform: translateX(-50%) translateY(0); }
 
-        @media (max-width: 640px) {
-            .container { padding: 100px 15px 40px; }
-            .profile-card { padding: 40px 15px 30px; border-radius: 30px; }
-            .pfp-ring { width: 120px; height: 120px; }
-            .name-text { font-size: 1.5rem; }
+        #cursor-dot {
+            position: fixed; width: 8px; height: 8px; background: var(--accent);
+            border-radius: 50%; pointer-events: none; z-index: 20001; transform: translate(-50%, -50%);
+            box-shadow: 0 0 15px var(--accent);
         }
     </style>
 </head>
 <body data-theme="dark">
 
-    <div id="cursor-glow"></div>
-    <div id="cursor-dot"></div>
+    <div id="cursor-dot" class="hidden sm:block"></div>
     <div class="scanline"></div>
     <div class="grid-overlay"></div>
 
-    <div class="top-controls" data-aos="fade-down">
+    <div class="top-controls">
         <div class="theme-toggle" onclick="toggleTheme()" id="theme-btn">
             <i class="fas fa-moon"></i>
         </div>
-        
         <div class="lang-switcher">
             <div class="lang-btn" id="btn-en" onclick="setLang('en')">EN</div>
             <div class="lang-btn" id="btn-bn" onclick="setLang('bn')">বাং</div>
@@ -201,153 +192,157 @@
     <div class="container">
         <section class="profile-card" data-aos="zoom-in">
             <div class="pfp-ring" data-tilt>
-                <img src="" id="ui-img" class="pfp-img" alt="Avatar" onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Sapphire'">
+                <img src="" id="ui-img" class="pfp-img" alt="Profile" onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Sapphire'">
             </div>
-            <h1 class="name-text text-3xl font-bold mb-2" id="ui-name">লোড হচ্ছে...</h1>
-            <p class="prof-text text-xs tracking-[4px] uppercase text-cyan-500 font-semibold" id="ui-prof"></p>
-            <div id="ui-quote" class="mt-6 text-sm italic opacity-60 px-2 sm:px-6 leading-relaxed"></div>
+            <h1 class="text-3xl font-bold mb-2" id="ui-name">লোড হচ্ছে...</h1>
+            <p class="text-xs tracking-[4px] uppercase text-cyan-400 font-semibold mb-4" id="ui-prof"></p>
+            <div id="ui-quote" class="text-sm italic opacity-60 px-6 leading-relaxed"></div>
         </section>
 
         <div class="section-label" id="label-soc">Social Networks</div>
         <div id="social-grid"></div>
 
-        <div class="section-label" id="label-con">Communication Channels</div>
+        <div class="section-label" id="label-con">Contacts</div>
         <div id="contact-grid"></div>
 
         <footer class="mt-20 pb-10 text-center opacity-30 text-[9px] tracking-[5px]" id="ui-footer"></footer>
     </div>
 
-    <!-- Admin Modal -->
+    <!-- Admin Panel -->
     <div id="admin-modal">
+        <!-- Login -->
         <div class="admin-box" id="login-panel">
-            <div class="text-center mb-8">
-                <i class="fas fa-shield-halved text-4xl text-cyan-400 mb-4"></i>
-                <h2 class="text-lg font-bold tracking-widest uppercase text-white">প্রবেশাধিকার সংরক্ষিত</h2>
+            <div class="text-center mb-6">
+                <i class="fas fa-lock text-3xl text-cyan-400 mb-2"></i>
+                <h2 class="font-bold uppercase tracking-widest">Admin Access</h2>
             </div>
-            <input type="password" id="adm-pass" class="admin-input text-center" placeholder="কি প্রদান করুন">
+            <input type="password" id="adm-pass" class="admin-input text-center" placeholder="প্রবেশ কি">
             <button class="p-btn btn-prime" onclick="login()">প্রবেশ করুন</button>
             <button class="p-btn btn-sec" onclick="closeAdmin()">বাতিল</button>
         </div>
 
+        <!-- Dashboard -->
         <div class="admin-box" id="dash-panel" style="display:none;">
-            <div class="flex gap-2 mb-6 bg-slate-900/50 p-1.5 rounded-2xl">
-                <button onclick="showTab('profile')" class="flex-1 py-2 rounded-xl text-[10px] font-bold text-white hover:bg-cyan-500 hover:text-black transition">তথ্য</button>
-                <button onclick="showTab('socials')" class="flex-1 py-2 rounded-xl text-[10px] font-bold text-white hover:bg-cyan-500 hover:text-black transition">সোশ্যাল</button>
-                <button onclick="showTab('contacts')" class="flex-1 py-2 rounded-xl text-[10px] font-bold text-white hover:bg-cyan-500 hover:text-black transition">কন্টাক্ট</button>
+            <div class="flex gap-2 mb-6 bg-slate-900 p-1 rounded-xl">
+                <button onclick="showTab('profile')" class="flex-1 py-2 rounded-lg text-[10px] font-bold uppercase hover:bg-cyan-500 hover:text-black">Profile</button>
+                <button onclick="showTab('socials')" class="flex-1 py-2 rounded-lg text-[10px] font-bold uppercase hover:bg-cyan-500 hover:text-black">Socials</button>
+                <button onclick="showTab('contacts')" class="flex-1 py-2 rounded-lg text-[10px] font-bold uppercase hover:bg-cyan-500 hover:text-black">Contact</button>
             </div>
-            
+
+            <!-- Profile Tab -->
             <div id="adm-profile" class="adm-tab">
+                <span class="adm-label-tag">Avatar URL</span>
                 <input type="text" id="in-img" class="admin-input" placeholder="ইমেজ লিঙ্ক">
-                <input type="text" id="in-name-en" class="admin-input" placeholder="Name (EN)">
-                <input type="text" id="in-name-bn" class="admin-input" placeholder="নাম (বাং)">
-                <input type="text" id="in-prof-en" class="admin-input" placeholder="Role (EN)">
-                <input type="text" id="in-prof-bn" class="admin-input" placeholder="পেশা (বাং)">
-                <textarea id="in-quote-bn" class="admin-input" placeholder="উক্তি (বাং)"></textarea>
-                <input type="text" id="in-footer" class="admin-input" placeholder="ফুটার টেক্সট">
+                
+                <span class="adm-label-tag">Name (EN | BN | AR)</span>
+                <div class="grid grid-cols-3 gap-2">
+                    <input type="text" id="in-name-en" class="admin-input" placeholder="English">
+                    <input type="text" id="in-name-bn" class="admin-input" placeholder="বাংলা">
+                    <input type="text" id="in-name-ar" class="admin-input" placeholder="العربية">
+                </div>
+
+                <span class="adm-label-tag">Profession (EN | BN | AR)</span>
+                <div class="grid grid-cols-3 gap-2">
+                    <input type="text" id="in-prof-en" class="admin-input" placeholder="English">
+                    <input type="text" id="in-prof-bn" class="admin-input" placeholder="বাংলা">
+                    <input type="text" id="in-prof-ar" class="admin-input" placeholder="العربية">
+                </div>
+
+                <span class="adm-label-tag">Motto (EN | BN | AR)</span>
+                <input type="text" id="in-quote-en" class="admin-input" placeholder="Quote English">
+                <input type="text" id="in-quote-bn" class="admin-input" placeholder="উক্তি বাংলা">
+                <input type="text" id="in-quote-ar" class="admin-input" placeholder="اقتباس باللغة العربية">
+
+                <span class="adm-label-tag">Footer</span>
+                <input type="text" id="in-footer" class="admin-input">
             </div>
 
+            <!-- Socials Tab -->
             <div id="adm-socials" class="adm-tab" style="display:none;">
-                <div id="adm-soc-list" class="space-y-2 mb-4"></div>
-                <button class="p-btn btn-prime" onclick="saveSocial()">নতুন লিঙ্ক যোগ করুন</button>
+                <div id="adm-soc-list"></div>
+                <button class="p-btn btn-sec text-[10px]" onclick="addSocItem()">+ ADD SOCIAL LINK</button>
             </div>
 
+            <!-- Contacts Tab -->
             <div id="adm-contacts" class="adm-tab" style="display:none;">
-                <div id="adm-con-list" class="space-y-2 mb-4"></div>
-                <button class="p-btn btn-prime" onclick="saveContact()">নতুন কন্টাক্ট যোগ করুন</button>
+                <div id="adm-con-list"></div>
+                <button class="p-btn btn-sec text-[10px]" onclick="addConItem()">+ ADD CONTACT ITEM</button>
             </div>
 
-            <div class="flex gap-3 mt-8">
-                <button class="p-btn btn-prime" onclick="saveToDisk()">সংরক্ষণ করুন</button>
+            <div class="flex gap-3 mt-6">
+                <button class="p-btn btn-prime" onclick="save()">সব সংরক্ষণ করুন</button>
                 <button class="p-btn btn-sec" onclick="closeAdmin()">বন্ধ করুন</button>
             </div>
         </div>
     </div>
 
-    <div id="toast">সিস্টেম আপডেট করা হয়েছে</div>
+    <div id="toast"></div>
 
     <script>
         const DEFAULT_DB = {
             profile: {
                 img: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sapphire",
-                name: { en: "Adil Bin Harun", bn: "আদিল বিন হারুন", ar: "عادل بن هارون" },
-                prof: { en: "System Architect", bn: "সিস্টেম আর্কিটেক্ট", ar: "مهندس نظم" },
-                quote: { en: "Navigating digital oceans.", bn: "ডিজিটাল সাগরের অতল গভীরে সত্যের সন্ধান।", ar: "الإبحار في المحيطات الرقمية." },
-                footer: "ENCRYPTED SAPPHIRE CORE • v10.0"
+                name: { en: "Adil Harun", bn: "আদিল হারুন", ar: "عادل هارون" },
+                prof: { en: "Developer", bn: "ডেভেলপার", ar: "مطور" },
+                quote: { en: "Keep coding.", bn: "কোডিং চালিয়ে যান।", ar: "استمر في البرمجة" },
+                footer: "© ELITE SAPPHIRE CORE"
             },
-            socials: [
-                { id: 1, name: {en: "LinkedIn", bn: "লিঙ্কডইন", ar: "لينكد إن"}, link: "https://linkedin.com" },
-                { id: 2, name: {en: "GitHub", bn: "গিটহাব", ar: "غيتهاب"}, link: "https://github.com" }
-            ],
-            contacts: [
-                { id: 1, label: {en: "WhatsApp", bn: "হোয়াটসঅ্যাপ", ar: "واتساب"}, val: "+880123456789" },
-                { id: 2, label: {en: "Email", bn: "ইমেইল", ar: "بريد"}, val: "adil@example.com" }
-            ]
+            socials: [],
+            contacts: []
         };
 
-        let db;
-        try {
-            const saved = localStorage.getItem('sapphire_cyber_v10');
-            // Check if saved exists and has properties, else fallback
-            if (saved) {
-                db = JSON.parse(saved);
-                if (!db.profile || !db.socials) db = DEFAULT_DB;
-            } else {
-                db = DEFAULT_DB;
-            }
-        } catch(e) {
-            db = DEFAULT_DB;
-        }
-
-        let lang = localStorage.getItem('app_lang') || 'bn';
-        let theme = localStorage.getItem('app_theme') || 'dark';
+        let db = JSON.parse(localStorage.getItem('sapphire_db')) || DEFAULT_DB;
+        let lang = localStorage.getItem('lang') || 'bn';
+        let theme = localStorage.getItem('theme') || 'dark';
 
         function applyTheme() {
             document.body.setAttribute('data-theme', theme);
-            const icon = document.querySelector('#theme-btn i');
-            if(icon) icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+            document.getElementById('theme-btn').innerHTML = theme === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
         }
 
         function toggleTheme() {
             theme = theme === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('app_theme', theme);
+            localStorage.setItem('theme', theme);
             applyTheme();
+        }
+
+        function setLang(l) {
+            lang = l;
+            localStorage.setItem('lang', l);
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + l).classList.add('active');
+            render();
         }
 
         function getIcon(name) {
             const n = name.toLowerCase();
             if(n.includes('facebook')) return 'fab fa-facebook';
-            if(n.includes('linkedin')) return 'fab fa-linkedin';
             if(n.includes('github')) return 'fab fa-github';
             if(n.includes('whatsapp')) return 'fab fa-whatsapp';
             if(n.includes('email')) return 'fas fa-envelope';
+            if(n.includes('linkedin')) return 'fab fa-linkedin';
             return 'fas fa-link';
         }
 
         function render() {
             const p = db.profile;
             const l = lang;
-            
-            const avatarImg = document.getElementById('ui-img');
-            avatarImg.src = p.img || DEFAULT_DB.profile.img;
-            
-            document.getElementById('ui-name').innerText = p.name[l] || p.name.en || "Unknown User";
-            document.getElementById('ui-prof').innerText = p.prof[l] || p.prof.en || "";
-            document.getElementById('ui-quote').innerText = p.quote[l] || p.quote.en || "";
-            document.getElementById('ui-footer').innerText = p.footer || "";
 
-            const labels = {
-                en: { soc: "Social Networks", con: "Communication Channels" },
-                bn: { soc: "সামাজিক মাধ্যম", con: "যোগাযোগ মাধ্যম" },
-                ar: { soc: "شبكات اجتماعية", con: "قنوات الاتصال" }
-            };
-            document.getElementById('label-soc').innerText = labels[l].soc;
-            document.getElementById('label-con').innerText = labels[l].con;
+            document.getElementById('ui-img').src = p.img;
+            document.getElementById('ui-name').innerText = p.name[l] || p.name.en;
+            document.getElementById('ui-prof').innerText = p.prof[l] || p.prof.en;
+            document.getElementById('ui-quote').innerText = p.quote[l] || p.quote.en;
+            document.getElementById('ui-footer').innerText = p.footer;
+
+            const t = { en: {s:"Socials", c:"Contact"}, bn: {s:"সামাজিক", c:"যোগাযোগ"}, ar: {s:"اجتماعي", c:"اتصال"} };
+            document.getElementById('label-soc').innerText = t[l].s;
+            document.getElementById('label-con').innerText = t[l].c;
 
             document.getElementById('social-grid').innerHTML = db.socials.map(s => `
                 <div class="item-card" data-aos="fade-up">
                     <div class="flex items-center gap-3">
                         <div class="icon-box"><i class="${getIcon(s.name.en)}"></i></div>
-                        <p class="font-bold">${s.name[l] || s.name.en}</p>
+                        <p class="font-semibold text-sm">${s.name[l] || s.name.en}</p>
                     </div>
                     <div class="flex gap-2">
                         <a href="${s.link}" target="_blank" class="btn-action"><i class="fas fa-external-link-alt"></i></a>
@@ -360,69 +355,87 @@
                 <div class="item-card" data-aos="fade-up">
                     <div class="flex items-center gap-3">
                         <div class="icon-box"><i class="${getIcon(c.label.en)}"></i></div>
-                        <p class="font-bold">${c.label[l] || c.label.en}</p>
+                        <p class="font-semibold text-sm">${c.label[l] || c.label.en}</p>
                     </div>
-                    <div class="flex gap-2">
-                        <div class="btn-action" onclick="copy('${c.val}')"><i class="far fa-copy"></i></div>
-                    </div>
+                    <div class="btn-action" onclick="copy('${c.val}')"><i class="far fa-copy"></i></div>
                 </div>
             `).join('');
         }
 
-        function setLang(l) {
-            lang = l;
-            localStorage.setItem('app_lang', l);
-            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-            const activeBtn = document.getElementById('btn-' + l);
-            if(activeBtn) activeBtn.classList.add('active');
-            render();
-        }
-
-        function copy(txt) {
-            const el = document.createElement('textarea');
-            el.value = txt;
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
-            msg("কপি করা হয়েছে");
-        }
-
-        function msg(m) {
-            const t = document.getElementById('toast');
-            t.innerText = m;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 2000);
-        }
-
+        // Admin Functions
         function login() {
             if(document.getElementById('adm-pass').value === 'Adil@2005') {
                 document.getElementById('login-panel').style.display = 'none';
                 document.getElementById('dash-panel').style.display = 'block';
                 syncInputs();
-            } else { msg("ভুল কি!"); }
+            } else { msg("ভুল পাসওয়ার্ড!"); }
         }
 
         function syncInputs() {
-            document.getElementById('in-img').value = db.profile.img;
-            document.getElementById('in-name-en').value = db.profile.name.en;
-            document.getElementById('in-name-bn').value = db.profile.name.bn;
-            document.getElementById('in-footer').value = db.profile.footer;
+            const p = db.profile;
+            document.getElementById('in-img').value = p.img;
+            document.getElementById('in-name-en').value = p.name.en;
+            document.getElementById('in-name-bn').value = p.name.bn;
+            document.getElementById('in-name-ar').value = p.name.ar;
+            document.getElementById('in-prof-en').value = p.prof.en;
+            document.getElementById('in-prof-bn').value = p.prof.bn;
+            document.getElementById('in-prof-ar').value = p.prof.ar;
+            document.getElementById('in-quote-en').value = p.quote.en;
+            document.getElementById('in-quote-bn').value = p.quote.bn;
+            document.getElementById('in-quote-ar').value = p.quote.ar;
+            document.getElementById('in-footer').value = p.footer;
+
+            renderAdminSocials();
+            renderAdminContacts();
         }
 
-        function saveToDisk() {
-            db.profile.img = document.getElementById('in-img').value;
-            db.profile.name.en = document.getElementById('in-name-en').value;
-            db.profile.name.bn = document.getElementById('in-name-bn').value;
-            db.profile.footer = document.getElementById('in-footer').value;
-            localStorage.setItem('sapphire_cyber_v10', JSON.stringify(db));
+        function renderAdminSocials() {
+            const container = document.getElementById('adm-soc-list');
+            container.innerHTML = db.socials.map((s, i) => `
+                <div class="adm-item-card">
+                    <span class="adm-label-tag">Social Link #${i+1}</span>
+                    <div class="grid grid-cols-3 gap-2 mb-2">
+                        <input type="text" class="admin-input !mb-0" value="${s.name.en}" onchange="db.socials[${i}].name.en=this.value" placeholder="EN">
+                        <input type="text" class="admin-input !mb-0" value="${s.name.bn}" onchange="db.socials[${i}].name.bn=this.value" placeholder="বাং">
+                        <input type="text" class="admin-input !mb-0" value="${s.name.ar}" onchange="db.socials[${i}].name.ar=this.value" placeholder="AR">
+                    </div>
+                    <input type="text" class="admin-input" value="${s.link}" onchange="db.socials[${i}].link=this.value" placeholder="URL Link">
+                    <button class="btn-danger p-btn" onclick="db.socials.splice(${i},1); renderAdminSocials()">Delete Link</button>
+                </div>
+            `).join('');
+        }
+
+        function renderAdminContacts() {
+            const container = document.getElementById('adm-con-list');
+            container.innerHTML = db.contacts.map((c, i) => `
+                <div class="adm-item-card">
+                    <span class="adm-label-tag">Contact #${i+1}</span>
+                    <div class="grid grid-cols-3 gap-2 mb-2">
+                        <input type="text" class="admin-input !mb-0" value="${c.label.en}" onchange="db.contacts[${i}].label.en=this.value" placeholder="Label EN">
+                        <input type="text" class="admin-input !mb-0" value="${c.label.bn}" onchange="db.contacts[${i}].label.bn=this.value" placeholder="লেবেল বাং">
+                        <input type="text" class="admin-input !mb-0" value="${c.label.ar}" onchange="db.contacts[${i}].label.ar=this.value" placeholder="AR">
+                    </div>
+                    <input type="text" class="admin-input" value="${c.val}" onchange="db.contacts[${i}].val=this.value" placeholder="Phone / Email">
+                    <button class="btn-danger p-btn" onclick="db.contacts.splice(${i},1); renderAdminContacts()">Delete Item</button>
+                </div>
+            `).join('');
+        }
+
+        function addSocItem() { db.socials.push({ name:{en:"New", bn:"নতুন", ar:"جديد"}, link:"https://" }); renderAdminSocials(); }
+        function addConItem() { db.contacts.push({ label:{en:"New", bn:"নতুন", ar:"جديد"}, val:"" }); renderAdminContacts(); }
+
+        function save() {
+            db.profile = {
+                img: document.getElementById('in-img').value,
+                name: { en: document.getElementById('in-name-en').value, bn: document.getElementById('in-name-bn').value, ar: document.getElementById('in-name-ar').value },
+                prof: { en: document.getElementById('in-prof-en').value, bn: document.getElementById('in-prof-bn').value, ar: document.getElementById('in-prof-ar').value },
+                quote: { en: document.getElementById('in-quote-en').value, bn: document.getElementById('in-quote-bn').value, ar: document.getElementById('in-quote-ar').value },
+                footer: document.getElementById('in-footer').value
+            };
+            localStorage.setItem('sapphire_db', JSON.stringify(db));
             render();
             closeAdmin();
-            msg("সেভ করা হয়েছে");
-        }
-
-        function closeAdmin() {
-            document.getElementById('admin-modal').style.display = 'none';
+            msg("সফলভাবে সেভ হয়েছে");
         }
 
         function showTab(t) {
@@ -430,29 +443,42 @@
             document.getElementById('adm-' + t).style.display = 'block';
         }
 
+        function closeAdmin() { document.getElementById('admin-modal').style.display = 'none'; }
+
+        function copy(t) {
+            navigator.clipboard.writeText(t).then(() => msg("কপি করা হয়েছে"));
+            const el = document.createElement('textarea'); el.value = t; document.body.appendChild(el); el.select();
+            document.execCommand('copy'); document.body.removeChild(el);
+        }
+
+        function msg(m) {
+            const t = document.getElementById('toast');
+            t.innerText = m; t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2000);
+        }
+
         // Custom Cursor
-        const glow = document.getElementById('cursor-glow');
         const dot = document.getElementById('cursor-dot');
         document.addEventListener('mousemove', e => {
-            glow.style.left = dot.style.left = e.clientX + 'px';
-            glow.style.top = dot.style.top = e.clientY + 'px';
+            dot.style.left = e.clientX + 'px';
+            dot.style.top = e.clientY + 'px';
         });
 
-        // Admin Access (Hold 2s)
+        // Admin Trigger (Hold 2.5s)
         let timer;
-        const startAdminTimer = () => timer = setTimeout(() => document.getElementById('admin-modal').style.display = 'flex', 2000);
-        const stopAdminTimer = () => clearTimeout(timer);
-        
-        document.addEventListener('mousedown', startAdminTimer);
-        document.addEventListener('mouseup', stopAdminTimer);
-        document.addEventListener('touchstart', startAdminTimer);
-        document.addEventListener('touchend', stopAdminTimer);
+        const start = () => timer = setTimeout(() => {
+            document.getElementById('adm-pass').value = '';
+            document.getElementById('login-panel').style.display = 'block';
+            document.getElementById('dash-panel').style.display = 'none';
+            document.getElementById('admin-modal').style.display = 'flex';
+        }, 2500);
+        const stop = () => clearTimeout(timer);
+        document.addEventListener('mousedown', start);
+        document.addEventListener('touchstart', start);
+        document.addEventListener('mouseup', stop);
+        document.addEventListener('touchend', stop);
 
-        window.onload = () => { 
-            AOS.init(); 
-            applyTheme();
-            setLang(lang); 
-        };
+        window.onload = () => { applyTheme(); setLang(lang); AOS.init(); };
     </script>
 </body>
 </html>

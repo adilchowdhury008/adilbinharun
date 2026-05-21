@@ -278,7 +278,12 @@
 
     <div id="toast"></div>
 
-    <script>
+    <!-- Firebase Script Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
         const DEFAULT_DB = {
             profile: {
                 img: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sapphire",
@@ -291,22 +296,83 @@
             contacts: []
         };
 
-        let db = JSON.parse(localStorage.getItem('sapphire_db')) || DEFAULT_DB;
+        let dbData = DEFAULT_DB;
         let lang = localStorage.getItem('lang') || 'bn';
         let theme = localStorage.getItem('theme') || 'dark';
 
-        function applyTheme() {
+        // === FIREBASE CONFIGURATION ===
+        let firebaseConfig;
+        if (typeof __firebase_config !== 'undefined') {
+            firebaseConfig = JSON.parse(__firebase_config);
+        } else {
+            // যদি আপনি ফাইলটি নিজের হোস্টিং এ আপলোড করেন, তবে এখানে আপনার ফায়ারবেস কনফিগ বসাবেন
+            firebaseConfig = {
+                apiKey: "YOUR_API_KEY",
+                authDomain: "YOUR_PROJECT.firebaseapp.com",
+                projectId: "YOUR_PROJECT",
+                storageBucket: "YOUR_PROJECT.appspot.com",
+                messagingSenderId: "YOUR_SENDER_ID",
+                appId: "YOUR_APP_ID"
+            };
+        }
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'adil-portfolio';
+        
+        // রিয়েলটাইম ডেটাবেস পাথ (সবার জন্য উন্মুক্ত)
+        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'portfolio', 'mainData');
+
+        // Initialize Firebase Auth and Sync
+        const initFirebase = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        // রিয়েলটাইম লিসেনার চালু করা
+                        onSnapshot(docRef, (docSnap) => {
+                            if (docSnap.exists()) {
+                                dbData = docSnap.data();
+                            } else {
+                                setDoc(docRef, DEFAULT_DB); // প্রথমবার ডেটা না থাকলে ডিফল্ট তৈরি করবে
+                                dbData = DEFAULT_DB;
+                            }
+                            render();
+                            // অ্যাডমিন প্যানেল খোলা থাকলে ইনপুটগুলোও আপডেট হবে
+                            if(document.getElementById('dash-panel').style.display === 'block'){
+                                syncInputs();
+                            }
+                        }, (error) => {
+                            console.error("Firestore Error:", error);
+                            msg("ডেটা লোড করতে সমস্যা হচ্ছে!");
+                        });
+                    }
+                });
+            } catch (error) {
+                console.error("Auth Error:", error);
+                render(); // ফায়ারবেস কাজ না করলে ডিফল্ট দেখাবে
+            }
+        };
+
+        // UI Functions
+        window.applyTheme = function() {
             document.body.setAttribute('data-theme', theme);
             document.getElementById('theme-btn').innerHTML = theme === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
         }
 
-        function toggleTheme() {
+        window.toggleTheme = function() {
             theme = theme === 'dark' ? 'light' : 'dark';
             localStorage.setItem('theme', theme);
             applyTheme();
         }
 
-        function setLang(l) {
+        window.setLang = function(l) {
             lang = l;
             localStorage.setItem('lang', l);
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
@@ -325,7 +391,7 @@
         }
 
         function render() {
-            const p = db.profile;
+            const p = dbData.profile;
             const l = lang;
 
             document.getElementById('ui-img').src = p.img;
@@ -338,7 +404,7 @@
             document.getElementById('label-soc').innerText = t[l].s;
             document.getElementById('label-con').innerText = t[l].c;
 
-            document.getElementById('social-grid').innerHTML = db.socials.map(s => `
+            document.getElementById('social-grid').innerHTML = (dbData.socials || []).map(s => `
                 <div class="item-card" data-aos="fade-up">
                     <div class="flex items-center gap-3">
                         <div class="icon-box"><i class="${getIcon(s.name.en)}"></i></div>
@@ -351,7 +417,7 @@
                 </div>
             `).join('');
 
-            document.getElementById('contact-grid').innerHTML = db.contacts.map(c => `
+            document.getElementById('contact-grid').innerHTML = (dbData.contacts || []).map(c => `
                 <div class="item-card" data-aos="fade-up">
                     <div class="flex items-center gap-3">
                         <div class="icon-box"><i class="${getIcon(c.label.en)}"></i></div>
@@ -363,7 +429,7 @@
         }
 
         // Admin Functions
-        function login() {
+        window.login = function() {
             if(document.getElementById('adm-pass').value === 'Adil@2005') {
                 document.getElementById('login-panel').style.display = 'none';
                 document.getElementById('dash-panel').style.display = 'block';
@@ -371,87 +437,106 @@
             } else { msg("ভুল পাসওয়ার্ড!"); }
         }
 
-        function syncInputs() {
-            const p = db.profile;
-            document.getElementById('in-img').value = p.img;
-            document.getElementById('in-name-en').value = p.name.en;
-            document.getElementById('in-name-bn').value = p.name.bn;
-            document.getElementById('in-name-ar').value = p.name.ar;
-            document.getElementById('in-prof-en').value = p.prof.en;
-            document.getElementById('in-prof-bn').value = p.prof.bn;
-            document.getElementById('in-prof-ar').value = p.prof.ar;
-            document.getElementById('in-quote-en').value = p.quote.en;
-            document.getElementById('in-quote-bn').value = p.quote.bn;
-            document.getElementById('in-quote-ar').value = p.quote.ar;
-            document.getElementById('in-footer').value = p.footer;
+        window.syncInputs = function() {
+            const p = dbData.profile;
+            document.getElementById('in-img').value = p.img || '';
+            document.getElementById('in-name-en').value = p.name.en || '';
+            document.getElementById('in-name-bn').value = p.name.bn || '';
+            document.getElementById('in-name-ar').value = p.name.ar || '';
+            document.getElementById('in-prof-en').value = p.prof.en || '';
+            document.getElementById('in-prof-bn').value = p.prof.bn || '';
+            document.getElementById('in-prof-ar').value = p.prof.ar || '';
+            document.getElementById('in-quote-en').value = p.quote.en || '';
+            document.getElementById('in-quote-bn').value = p.quote.bn || '';
+            document.getElementById('in-quote-ar').value = p.quote.ar || '';
+            document.getElementById('in-footer').value = p.footer || '';
 
             renderAdminSocials();
             renderAdminContacts();
         }
 
-        function renderAdminSocials() {
+        window.renderAdminSocials = function() {
             const container = document.getElementById('adm-soc-list');
-            container.innerHTML = db.socials.map((s, i) => `
+            container.innerHTML = (dbData.socials || []).map((s, i) => `
                 <div class="adm-item-card">
                     <span class="adm-label-tag">Social Link #${i+1}</span>
                     <div class="grid grid-cols-3 gap-2 mb-2">
-                        <input type="text" class="admin-input !mb-0" value="${s.name.en}" onchange="db.socials[${i}].name.en=this.value" placeholder="EN">
-                        <input type="text" class="admin-input !mb-0" value="${s.name.bn}" onchange="db.socials[${i}].name.bn=this.value" placeholder="বাং">
-                        <input type="text" class="admin-input !mb-0" value="${s.name.ar}" onchange="db.socials[${i}].name.ar=this.value" placeholder="AR">
+                        <input type="text" class="admin-input !mb-0" value="${s.name.en}" onchange="updateSocial(${i}, 'en', this.value)" placeholder="EN">
+                        <input type="text" class="admin-input !mb-0" value="${s.name.bn}" onchange="updateSocial(${i}, 'bn', this.value)" placeholder="বাং">
+                        <input type="text" class="admin-input !mb-0" value="${s.name.ar}" onchange="updateSocial(${i}, 'ar', this.value)" placeholder="AR">
                     </div>
-                    <input type="text" class="admin-input" value="${s.link}" onchange="db.socials[${i}].link=this.value" placeholder="URL Link">
-                    <button class="btn-danger p-btn" onclick="db.socials.splice(${i},1); renderAdminSocials()">Delete Link</button>
+                    <input type="text" class="admin-input" value="${s.link}" onchange="updateSocialLink(${i}, this.value)" placeholder="URL Link">
+                    <button class="btn-danger p-btn" onclick="deleteSocial(${i})">Delete Link</button>
                 </div>
             `).join('');
         }
 
-        function renderAdminContacts() {
+        window.updateSocial = function(i, lang, val) { dbData.socials[i].name[lang] = val; }
+        window.updateSocialLink = function(i, val) { dbData.socials[i].link = val; }
+        window.deleteSocial = function(i) { dbData.socials.splice(i, 1); renderAdminSocials(); }
+
+        window.renderAdminContacts = function() {
             const container = document.getElementById('adm-con-list');
-            container.innerHTML = db.contacts.map((c, i) => `
+            container.innerHTML = (dbData.contacts || []).map((c, i) => `
                 <div class="adm-item-card">
                     <span class="adm-label-tag">Contact #${i+1}</span>
                     <div class="grid grid-cols-3 gap-2 mb-2">
-                        <input type="text" class="admin-input !mb-0" value="${c.label.en}" onchange="db.contacts[${i}].label.en=this.value" placeholder="Label EN">
-                        <input type="text" class="admin-input !mb-0" value="${c.label.bn}" onchange="db.contacts[${i}].label.bn=this.value" placeholder="লেবেল বাং">
-                        <input type="text" class="admin-input !mb-0" value="${c.label.ar}" onchange="db.contacts[${i}].label.ar=this.value" placeholder="AR">
+                        <input type="text" class="admin-input !mb-0" value="${c.label.en}" onchange="updateContact(${i}, 'en', this.value)" placeholder="Label EN">
+                        <input type="text" class="admin-input !mb-0" value="${c.label.bn}" onchange="updateContact(${i}, 'bn', this.value)" placeholder="লেবেল বাং">
+                        <input type="text" class="admin-input !mb-0" value="${c.label.ar}" onchange="updateContact(${i}, 'ar', this.value)" placeholder="AR">
                     </div>
-                    <input type="text" class="admin-input" value="${c.val}" onchange="db.contacts[${i}].val=this.value" placeholder="Phone / Email">
-                    <button class="btn-danger p-btn" onclick="db.contacts.splice(${i},1); renderAdminContacts()">Delete Item</button>
+                    <input type="text" class="admin-input" value="${c.val}" onchange="updateContactVal(${i}, this.value)" placeholder="Phone / Email">
+                    <button class="btn-danger p-btn" onclick="deleteContact(${i})">Delete Item</button>
                 </div>
             `).join('');
         }
 
-        function addSocItem() { db.socials.push({ name:{en:"New", bn:"নতুন", ar:"جديد"}, link:"https://" }); renderAdminSocials(); }
-        function addConItem() { db.contacts.push({ label:{en:"New", bn:"নতুন", ar:"جديد"}, val:"" }); renderAdminContacts(); }
+        window.updateContact = function(i, lang, val) { dbData.contacts[i].label[lang] = val; }
+        window.updateContactVal = function(i, val) { dbData.contacts[i].val = val; }
+        window.deleteContact = function(i) { dbData.contacts.splice(i, 1); renderAdminContacts(); }
 
-        function save() {
-            db.profile = {
+        window.addSocItem = function() { dbData.socials.push({ name:{en:"New", bn:"নতুন", ar:"جديد"}, link:"https://" }); renderAdminSocials(); }
+        window.addConItem = function() { dbData.contacts.push({ label:{en:"New", bn:"নতুন", ar:"جديد"}, val:"" }); renderAdminContacts(); }
+
+        window.save = async function() {
+            if(!auth.currentUser) {
+                msg("লগইন সমস্যা। অনুগ্রহ করে আবার চেষ্টা করুন।");
+                return;
+            }
+            
+            dbData.profile = {
                 img: document.getElementById('in-img').value,
                 name: { en: document.getElementById('in-name-en').value, bn: document.getElementById('in-name-bn').value, ar: document.getElementById('in-name-ar').value },
                 prof: { en: document.getElementById('in-prof-en').value, bn: document.getElementById('in-prof-bn').value, ar: document.getElementById('in-prof-ar').value },
                 quote: { en: document.getElementById('in-quote-en').value, bn: document.getElementById('in-quote-bn').value, ar: document.getElementById('in-quote-ar').value },
                 footer: document.getElementById('in-footer').value
             };
-            localStorage.setItem('sapphire_db', JSON.stringify(db));
-            render();
-            closeAdmin();
-            msg("সফলভাবে সেভ হয়েছে");
+            
+            // Firebase এ সেভ করা
+            try {
+                await setDoc(docRef, dbData);
+                msg("সফলভাবে ক্লাউডে সেভ হয়েছে!");
+                closeAdmin();
+            } catch (error) {
+                console.error("Save Error:", error);
+                msg("সেভ করতে ব্যর্থ হয়েছে!");
+            }
         }
 
-        function showTab(t) {
+        window.showTab = function(t) {
             document.querySelectorAll('.adm-tab').forEach(x => x.style.display = 'none');
             document.getElementById('adm-' + t).style.display = 'block';
         }
 
-        function closeAdmin() { document.getElementById('admin-modal').style.display = 'none'; }
+        window.closeAdmin = function() { document.getElementById('admin-modal').style.display = 'none'; }
 
-        function copy(t) {
-            navigator.clipboard.writeText(t).then(() => msg("কপি করা হয়েছে"));
+        window.copy = function(t) {
+            navigator.clipboard.writeText(t).then(() => window.msg("কপি করা হয়েছে"));
             const el = document.createElement('textarea'); el.value = t; document.body.appendChild(el); el.select();
             document.execCommand('copy'); document.body.removeChild(el);
         }
 
-        function msg(m) {
+        window.msg = function(m) {
             const t = document.getElementById('toast');
             t.innerText = m; t.classList.add('show');
             setTimeout(() => t.classList.remove('show'), 2000);
@@ -478,7 +563,12 @@
         document.addEventListener('mouseup', stop);
         document.addEventListener('touchend', stop);
 
-        window.onload = () => { applyTheme(); setLang(lang); AOS.init(); };
+        // Initialize Call
+        applyTheme();
+        setLang(lang);
+        AOS.init();
+        initFirebase();
+
     </script>
 </body>
 </html>

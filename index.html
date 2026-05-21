@@ -301,20 +301,15 @@
         let theme = localStorage.getItem('theme') || 'dark';
 
         // === FIREBASE CONFIGURATION ===
-        let firebaseConfig;
-        if (typeof __firebase_config !== 'undefined') {
-            firebaseConfig = JSON.parse(__firebase_config);
-        } else {
-            // যদি আপনি ফাইলটি নিজের হোস্টিং এ আপলোড করেন, তবে এখানে আপনার ফায়ারবেস কনফিগ বসাবেন
-            firebaseConfig = {
-                apiKey: "YOUR_API_KEY",
-                authDomain: "YOUR_PROJECT.firebaseapp.com",
-                projectId: "YOUR_PROJECT",
-                storageBucket: "YOUR_PROJECT.appspot.com",
-                messagingSenderId: "YOUR_SENDER_ID",
-                appId: "YOUR_APP_ID"
-            };
-        }
+        const firebaseConfig = {
+            apiKey: "AIzaSyALMbOClwa5JqO5sODqRaF5dBYxYh6lS_Y",
+            authDomain: "adil-bin-harun.firebaseapp.com",
+            projectId: "adil-bin-harun",
+            storageBucket: "adil-bin-harun.firebasestorage.app",
+            messagingSenderId: "640222460535",
+            appId: "1:640222460535:web:72ec791d19f0b2df90e472",
+            measurementId: "G-0S6MXW5YL7"
+        };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);

@@ -306,7 +306,7 @@
                 img: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sapphire",
                 name: { en: "Adil Harun", bn: "আদিল হারুন", ar: "عادل هارون" },
                 prof: { en: "Developer", bn: "ডেভেলপার", ar: "মটর" },
-                quote: { en: "Keep coding.", bn: "কোডিং চালিয়ে যান।", ar: "استمر في البرمجة" },
+                quote: { en: "Keep coding.", bn: "কোডিং চালিয়ে যান।", ar: "استمر في البرমجة" },
                 footer: "© ELITE SAPPHIRE CORE"
             },
             socials: [],
@@ -318,25 +318,31 @@
         let lang = localStorage.getItem('lang') || 'bn';
         let theme = localStorage.getItem('theme') || 'dark';
 
+        // Real-time Firestore Live Listening (Unauthenticated standard check fallback)
+        function startRealtimeSync() {
+            docRef.onSnapshot((doc) => {
+                if (doc.exists) {
+                    db = doc.data();
+                    localStorage.setItem('sapphire_db', JSON.stringify(db)); // Backup locally
+                    render();
+                } else {
+                    // If no data in firebase yet, save the default
+                    docRef.set(db).catch(err => console.error("Initial write failed:", err));
+                }
+            }, (error) => {
+                console.error("Firestore loading error:", error);
+            });
+        }
+
         // Sign-in Anonymously FIRST so security rules grant access to other devices
         fauth.signInAnonymously()
             .then(() => {
-                // Real-time Firestore Sync (Once Authenticated)
-                docRef.onSnapshot((doc) => {
-                    if (doc.exists) {
-                        db = doc.data();
-                        localStorage.setItem('sapphire_db', JSON.stringify(db)); // Backup locally
-                        render();
-                    } else {
-                        // If no data in firebase yet, save the default
-                        docRef.set(db).catch(err => console.error("Initial write failed:", err));
-                    }
-                }, (error) => {
-                    console.error("Firestore loading error:", error);
-                });
+                startRealtimeSync();
             })
             .catch((error) => {
-                console.error("Authentication error on client:", error);
+                console.warn("Authentication failed, trying normal fetch anyway:", error);
+                // If Auth fails (e.g., config error), still try to sync without auth
+                startRealtimeSync();
             });
 
         function applyTheme() {

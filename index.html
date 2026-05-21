@@ -13,8 +13,9 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Firebase SDK (Compat Version for seamless integration) -->
+    <!-- Firebase SDK (Compat Version with Auth and Firestore) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
 
     <style>
@@ -296,6 +297,7 @@
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
+        const fauth = firebase.auth();
         const fdb = firebase.firestore();
         const docRef = fdb.collection('portfolio').doc('mainData');
 
@@ -303,7 +305,7 @@
             profile: {
                 img: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sapphire",
                 name: { en: "Adil Harun", bn: "আদিল হারুন", ar: "عادل هارون" },
-                prof: { en: "Developer", bn: "ডেভেলপার", ar: "مطور" },
+                prof: { en: "Developer", bn: "ডেভেলপার", ar: "মটর" },
                 quote: { en: "Keep coding.", bn: "কোডিং চালিয়ে যান।", ar: "استمر في البرمجة" },
                 footer: "© ELITE SAPPHIRE CORE"
             },
@@ -311,26 +313,31 @@
             contacts: []
         };
 
-        // Fallback to local storage before firebase loads
+        // Fallback locally before firebase sync loads
         let db = JSON.parse(localStorage.getItem('sapphire_db')) || DEFAULT_DB;
         let lang = localStorage.getItem('lang') || 'bn';
         let theme = localStorage.getItem('theme') || 'dark';
 
-        // Real-time Firebase Sync
-        docRef.onSnapshot((doc) => {
-            if (doc.exists) {
-                db = doc.data();
-                localStorage.setItem('sapphire_db', JSON.stringify(db)); // Backup locally
-                render();
-            } else {
-                // If no data in firebase yet, save the default/local data there
-                docRef.set(db).catch(err => console.error(err));
-            }
-        }, (error) => {
-            console.error("Firestore connection error:", error);
-            // If firebase fails, we already have the local db rendered.
-        });
-
+        // Sign-in Anonymously FIRST so security rules grant access to other devices
+        fauth.signInAnonymously()
+            .then(() => {
+                // Real-time Firestore Sync (Once Authenticated)
+                docRef.onSnapshot((doc) => {
+                    if (doc.exists) {
+                        db = doc.data();
+                        localStorage.setItem('sapphire_db', JSON.stringify(db)); // Backup locally
+                        render();
+                    } else {
+                        // If no data in firebase yet, save the default
+                        docRef.set(db).catch(err => console.error("Initial write failed:", err));
+                    }
+                }, (error) => {
+                    console.error("Firestore loading error:", error);
+                });
+            })
+            .catch((error) => {
+                console.error("Authentication error on client:", error);
+            });
 
         function applyTheme() {
             document.body.setAttribute('data-theme', theme);
@@ -471,15 +478,15 @@
                 footer: document.getElementById('in-footer').value
             };
             
-            // Save to Firebase
+            // Update online Database
             docRef.set(db).then(() => {
                 localStorage.setItem('sapphire_db', JSON.stringify(db));
                 render();
                 closeAdmin();
                 msg("সফলভাবে সেভ হয়েছে");
             }).catch((error) => {
-                console.error("Error saving document: ", error);
-                msg("সেভ করতে সমস্যা হয়েছে! কনসোল চেক করুন।");
+                console.error("Error saving to Firebase: ", error);
+                msg("সেভ হয়নি! ডাটাবেজ পারমিশন চেক করুন।");
             });
         }
 

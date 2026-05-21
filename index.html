@@ -305,7 +305,7 @@
             profile: {
                 img: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sapphire",
                 name: { en: "Adil Harun", bn: "আদিল হারুন", ar: "عادل هارون" },
-                prof: { en: "Developer", bn: "ডেভেলপার", ar: "মটর" },
+                prof: { en: "Developer", bn: "ডেভেলপার", ar: "مطور" },
                 quote: { en: "Keep coding.", bn: "কোডিং চালিয়ে যান।", ar: "استمر في البرমجة" },
                 footer: "© ELITE SAPPHIRE CORE"
             },
@@ -318,7 +318,7 @@
         let lang = localStorage.getItem('lang') || 'bn';
         let theme = localStorage.getItem('theme') || 'dark';
 
-        // Real-time Firestore Live Listening (Unauthenticated standard check fallback)
+        // Real-time Firestore Live Listening (Listen even if auth fails)
         function startRealtimeSync() {
             docRef.onSnapshot((doc) => {
                 if (doc.exists) {
@@ -341,8 +341,7 @@
             })
             .catch((error) => {
                 console.warn("Authentication failed, trying normal fetch anyway:", error);
-                // If Auth fails (e.g., config error), still try to sync without auth
-                startRealtimeSync();
+                startRealtimeSync(); // fallback try
             });
 
         function applyTheme() {

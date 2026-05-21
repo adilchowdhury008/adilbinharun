@@ -316,10 +316,8 @@
         const db = getFirestore(app);
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'adil-portfolio';
         
-        // রিয়েলটাইম ডেটাবেস পাথ (সবার জন্য উন্মুক্ত)
         const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'portfolio', 'mainData');
 
-        // Initialize Firebase Auth and Sync
         const initFirebase = async () => {
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -330,32 +328,26 @@
 
                 onAuthStateChanged(auth, (user) => {
                     if (user) {
-                        // রিয়েলটাইম লিসেনার চালু করা
                         onSnapshot(docRef, (docSnap) => {
                             if (docSnap.exists()) {
                                 dbData = docSnap.data();
                             } else {
-                                setDoc(docRef, DEFAULT_DB); // প্রথমবার ডেটা না থাকলে ডিফল্ট তৈরি করবে
+                                setDoc(docRef, DEFAULT_DB);
                                 dbData = DEFAULT_DB;
                             }
                             render();
-                            // অ্যাডমিন প্যানেল খোলা থাকলে ইনপুটগুলোও আপডেট হবে
                             if(document.getElementById('dash-panel').style.display === 'block'){
                                 syncInputs();
                             }
-                        }, (error) => {
-                            console.error("Firestore Error:", error);
-                            msg("ডেটা লোড করতে সমস্যা হচ্ছে!");
                         });
                     }
                 });
             } catch (error) {
                 console.error("Auth Error:", error);
-                render(); // ফায়ারবেস কাজ না করলে ডিফল্ট দেখাবে
+                render();
             }
         };
 
-        // UI Functions
         window.applyTheme = function() {
             document.body.setAttribute('data-theme', theme);
             document.getElementById('theme-btn').innerHTML = theme === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
@@ -423,7 +415,6 @@
             `).join('');
         }
 
-        // Admin Functions
         window.login = function() {
             if(document.getElementById('adm-pass').value === 'Adil@2005') {
                 document.getElementById('login-panel').style.display = 'none';
@@ -494,9 +485,14 @@
         window.addConItem = function() { dbData.contacts.push({ label:{en:"New", bn:"নতুন", ar:"جديد"}, val:"" }); renderAdminContacts(); }
 
         window.save = async function() {
+            // যদি লগইন না থাকে, পুনরায় সাইন-ইন করার চেষ্টা করবে
             if(!auth.currentUser) {
-                msg("লগইন সমস্যা। অনুগ্রহ করে আবার চেষ্টা করুন।");
-                return;
+                try {
+                    await signInAnonymously(auth);
+                } catch(e) {
+                    msg("লগইন করতে ব্যর্থ, দয়া করে আবার চেষ্টা করুন!");
+                    return;
+                }
             }
             
             dbData.profile = {
@@ -507,7 +503,6 @@
                 footer: document.getElementById('in-footer').value
             };
             
-            // Firebase এ সেভ করা
             try {
                 await setDoc(docRef, dbData);
                 msg("সফলভাবে ক্লাউডে সেভ হয়েছে!");
@@ -537,14 +532,12 @@
             setTimeout(() => t.classList.remove('show'), 2000);
         }
 
-        // Custom Cursor
         const dot = document.getElementById('cursor-dot');
         document.addEventListener('mousemove', e => {
             dot.style.left = e.clientX + 'px';
             dot.style.top = e.clientY + 'px';
         });
 
-        // Admin Trigger (Hold 2.5s)
         let timer;
         const start = () => timer = setTimeout(() => {
             document.getElementById('adm-pass').value = '';
@@ -558,7 +551,6 @@
         document.addEventListener('mouseup', stop);
         document.addEventListener('touchend', stop);
 
-        // Initialize Call
         applyTheme();
         setLang(lang);
         AOS.init();
